@@ -27,16 +27,16 @@ public class Test_02_GetRequestWithPathMethod {
          *         "name": "mike",
          *         "email": "mike@gmail.com",
          *         "password": "$2y$10$KWJ2f3iTUFvkvzTS7/O0AOBmfwYknjscuwdA8n4c25gkzFqi9tswW",
-         *         "about": "Excellent QA",
+         *         "about": "graduated SDET 2023",
          *         "terms": "2",
          *         "date": "2022-09-12 20:50:38",
-         *         "job": "SDET",
-         *         "company": "Amazon",
-         *         "website": "Krafttechnologie",
-         *         "location": "USD",
+         *         "job": "QA Test Engineer",
+         *         "company": "Krafttech",
+         *         "website": "www.kraftech.com",
+         *         "location": "Istanbul",
          *         "skills": [
-         *             "Cucumber",
-         *             "TestNG"
+         *             "Selenium",
+         *             "Java"
          *         ],
          */
 
@@ -56,12 +56,14 @@ public class Test_02_GetRequestWithPathMethod {
         System.out.println("response.path(\"email\") = " + response.path("email"));
         System.out.println("response.path(\"company\") = " + response.path("company"));
         System.out.println("response.path(\"website\") = " + response.path("website"));
-
         //bilgileri assert edelim
-        int userId = response.path("id[0]");
-        assertEquals(userId, 24);
-        assertEquals(response.path("email[0]"), "mike@gmail.com");
-        assertEquals(response.path("company[0]"), "Amazon");
+        int id=response.path("id[0]");  //[0].id
+        int id1=response.path("[0].id");  //[0].id
+        assertEquals(id,24);
+        System.out.println("id = " + id);
+        System.out.println("id1 = " + id1);
+        assertEquals(response.path("email[0]"),"mike@gmail.com");
+        assertEquals(response.path("location[0]"),"Istanbul");
 
     }
 
@@ -96,35 +98,52 @@ public class Test_02_GetRequestWithPathMethod {
         assertEquals(response.getHeader("Content-Type"), "application/json; charset=UTF-8");
         assertTrue(response.headers().toString().contains("Content-Type"));
 
-        //ilk elemanı assert edelim
-        int id1 = response.path("id[0]");
-        assertEquals(id1, 1);
-        assertEquals(response.path("name[0]"), "MercanS");
+        //ilk elemanın id'sini ve name'ini assert edelim
+        int id1=response.path("id[0]");
+        assertEquals(id1,1);
+        assertEquals(response.path("name[0]"),"MercanS");
+        System.out.println("response.path(\"['name'][0]\") = " + response.path("[0]['name']"));
 
-        int lastId = response.path("id[-1]");
-        assertEquals(lastId, 102);
-        assertEquals(response.path("name[-1]"), "GHAN");
+        //son elemanın assert edelim
+        int lastId=response.path("id[-1]");
+        assertEquals(lastId,102);
+        assertEquals(response.path("name[-1]"),"GHAN");
+        assertEquals(response.path("name[49]"),"GHAN");
 
         System.out.println("response.path(\"id[49]\") = " + response.path("id[49]"));
         System.out.println("response.path(\"name[49]\") = " + response.path("name[49]"));
 
-        //3. elemanın companysini alalım
-        System.out.println("response.path(\"company[2]\") = " + response.path("company[2]"));
-        assertEquals(response.path("company[2]"), "Amazon");
+        //isimlerden birinin Selim Gezer olduğunu assert edelim
+        List<String> names = response.path("name");   //bütün isimleri alır...
+        System.out.println("names = " + names);
+        assertTrue(names.stream().anyMatch(e->e.equals("Selim Gezer")));
 
-        //3.elemanın skillsini alalım
+        //3.elemanın companysini alalım
+        assertEquals(response.path("company[2]"),"Krafttech");
+
+        //3.elemanın skillerini alalım
         System.out.println("response.path(\"skills[2]\") = " + response.path("skills[2]"));
 
-        //3.elemanın skillsini alalım ve ikincisini assert edelim
-        System.out.println("response.path(\"skills[2][1]\") = " + response.path("skills[2][1]"));
-        assertEquals(response.path("skills[2][1]"), "TestNG");
+        //3. elemanın 2. skillini assert edelim
+        assertEquals(response.path("skills[2][1]"),"Java");
+        assertEquals(response.path("[2].skills[1]"),"Java");
 
-        //3.elemanın 2.education'ın school'unu alalım
-        System.out.println("response.path(\"education[2].school[1]\") = " + response.path("education[2].school[1]"));
-        assertEquals(response.path("education[2].school[1]"), "Krafttech Technologie Bootcamp");
+        //3. elemanın ikinci education'ın schoolunu alalım
+        System.out.println("response.path(\"education[2].school[]1\") = " + response.path("education[2].school[1]"));
+        System.out.println("response.path(\"education[2][1].school\") = " + response.path("education[2][1].school"));
+        System.out.println("response.path(\"[2].education[1].school\") = " + response.path("[2].education[1].school"));
+        System.out.println("response.path(\"[2].education.school[1]\") = " + response.path("[2].education.school[1]"));
 
-        //son elemanın education'ın degree'sini alalım
+        System.out.println("response.path(\"education[2].school\") = " + response.path("education[2].school"));
+
+        assertEquals(response.path("education[2].school[1]"),"Krafttech Technologie Bootcamp");
+
+        //son elemanın education degreesini alalım
+
         System.out.println("response.path(\"education[-1].degree[0]\") = " + response.path("education[-1].degree[0]"));
+        System.out.println("response.path(\"[-1].education.degree[0]\") = " + response.path("[49].education.degree[0]"));
+
+        System.out.println("response.path(\"experience[-2].job\") = " + response.path("experience[-2].job[0]")); //çalışmaz
 
         //20. elemanın education bilgilerini alalım
        List<String > listEducation= response.path("education[19]");
@@ -137,6 +156,9 @@ public class Test_02_GetRequestWithPathMethod {
         //20.elemanın ikinci education'ın id.sini alalım
         System.out.println("mapSecondEducation.get(\"id\") = " + mapSecondEducation.get("id"));
         System.out.println("response.path(\"education[19].id[1]\") = " + response.path("education[19].id[1]"));
+
+        System.out.println("response.path(\"[19].education.id[1]\") = " + response.path("[19].education.id[1]"));
+        System.out.println("response.path(\"[19].education[1].id\") = " + response.path("[19].education[1].id"));
 
     }
 
@@ -163,12 +185,15 @@ public class Test_02_GetRequestWithPathMethod {
         //content type'ı assert edelim.
         assertEquals(response.contentType(),"application/json; charset=utf-8");
 
+        response.prettyPrint();
+
         //isbn'yi assert edelim
         System.out.println("response.path(\"books.isbn[0]\") = " + response.path("books.isbn[0]"));
         assertEquals(response.path("books.isbn[0]"),"9781449325862");
         //2.yol
         System.out.println("response.path(\"books[0].isbn\") = " + response.path("books[0].isbn"));
         assertEquals(response.path("books[0].isbn"),"9781449325862");
+
 
         //publisher'ı assert edelim
         System.out.println("response.path(\"books.publisher[0]\") = " + response.path("books.publisher[0]"));
@@ -180,6 +205,7 @@ public class Test_02_GetRequestWithPathMethod {
         //son kitabın publisher'ını alalım
         System.out.println("response.path(\"books[7].publisher\") = " + response.path("books[7].publisher"));
         System.out.println("response.path(\"books.publisher[7]\") = " + response.path("books.publisher[7]"));
+
 
         //bütün isbn'leri alalım..
         System.out.println("response.path(\"books.isbn\") = " + response.path("books.isbn"));

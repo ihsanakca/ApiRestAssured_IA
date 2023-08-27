@@ -47,13 +47,14 @@ public class Test_01_UserGetRequest {
     public void test2(){
         /** task
          * Get All Users
+         * kraft api
          */
 
         Response response = given().accept(ContentType.JSON)
                 .queryParam("pagesize", 20)
                 .queryParam("page", 1)
                 .and()
-                .when()
+                .when().log().all()
                 .get(kraftBaseURL + "/allusers/alluser");
 
         System.out.println("response.statusCode() = " + response.statusCode());
@@ -69,11 +70,20 @@ public class Test_01_UserGetRequest {
                 .when()
                 .get(kraftBaseURL + "/allusers/getbyid/{userId}");
 
-        //response.prettyPrint();
+        response.prettyPrint();
 
 
         assertEquals(response.statusCode(),200);
         assertEquals(response.contentType(),"application/json; charset=UTF-8");
+
+        //response headers
+
+        System.out.println("response.headers() = " + response.headers());
+
+        assertEquals(response.header("Content-Length"), "756");
+        assertEquals(response.header("Connection"), "Upgrade, Keep-Alive");
+
+        assertTrue(response.headers().hasHeaderWithName("Date"));
 
         System.out.println("response.header(\"Content-Length\") = " + response.header("Content-Length"));
         System.out.println("response.header(\"Content-Type\") = " + response.header("Content-Type"));
@@ -86,7 +96,7 @@ public class Test_01_UserGetRequest {
 
 
         //verify headers
-        assertEquals(response.header("Content-Length"),"721");
+        assertEquals(response.header("Content-Length"),"756");
 
         //tarihi assert edelim
         assertTrue(response.headers().hasHeaderWithName("Date"));

@@ -233,6 +233,18 @@ public class Test_03_GetRequestWithJsonPath {
         System.out.println("actualUserOneFirstEducationSchool_3 = " + actualUserOneFirstEducationSchool_3);
         System.out.println("----------------------------");
 
+        //4.yol
+        String actualUserOneFirstEducationSchool_4=jsonPath.get("[0].education.school[0]");
+        assertEquals(actualUserOneFirstEducationSchool_4,expectedUserOneFirstEducationSchool);
+        System.out.println("actualUserOneFirstEducationSchool_4 = " + actualUserOneFirstEducationSchool_4);
+        System.out.println("----------------------------");
+
+        //5.yol
+        String actualUserOneFirstEducationSchool_5=jsonPath.get("[0].education[0].school");
+        assertEquals(actualUserOneFirstEducationSchool_5,expectedUserOneFirstEducationSchool);
+        System.out.println("actualUserOneFirstEducationSchool_5 = " + actualUserOneFirstEducationSchool_5);
+        System.out.println("----------------------------");
+
         //path metotu ile yapalım
         System.out.println("response.path(\"education[0].school[0]\") = " + response.path("education[0].school[0]"));
         System.out.println("----------------------------");
@@ -254,6 +266,12 @@ public class Test_03_GetRequestWithJsonPath {
        //veya path metot ile
         System.out.println("response.path(\"education[0][1].school\") = " + response.path("education[0][1].school"));
 
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++");
+
+        List<List<String>> education = jsonPath.getList("education");
+        System.out.println("education = " + education);
+        List<List<Map<String ,Object>>> allEducations=jsonPath.getList("education");
+        System.out.println("allEducations.get(0).get(0).get(\"school\") = " + allEducations.get(0).get(0).get("school"));
 
 
     }

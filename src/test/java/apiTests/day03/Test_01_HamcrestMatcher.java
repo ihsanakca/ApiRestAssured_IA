@@ -87,7 +87,7 @@ public class Test_01_HamcrestMatcher {
          *         user's job should be "QA Automation Engineer"
          *         User's second skill should be "Selenium"
          *         User's third education school name should be "Ankara University"
-         *         The response header Content-Lenght should be 776
+         *         The response header Content-Lenght should be 756
          *         User's email should be "sgezer@gmail.com"
          *         User's company should be "KraftTech"
          *         Response headers should have "Date" header
@@ -118,9 +118,9 @@ public class Test_01_HamcrestMatcher {
                         "[0].company", equalTo("KraftTech"),
                         "company[0]", equalTo("KraftTech"))
                 .and()
-                .header("Content-Length", equalTo("776"))
-                .header("Content-Length", "776")
-                .headers("Content-Length", "776")
+                .header("Content-Length", equalTo("756"))
+                .header("Content-Length", "756")
+                .headers("Content-Length", "756")
                 .headers("Date", notNullValue())
                 .header("Date", notNullValue());
     }
@@ -181,7 +181,7 @@ public class Test_01_HamcrestMatcher {
          *          And json data should have "QA" for job
          *          And json data should have "İTÜ" for the tenth user's education school
          *          And json data should have "Junior Developer" for the first user's third experience job
-         *          And json data should have "Google" for the last user's first experience company
+         *          And json data should have "Odtü" for the last user's first education company
          *          Only take the response headers log.
          *
          */
@@ -196,8 +196,8 @@ public class Test_01_HamcrestMatcher {
                 .statusCode(200)
                 .contentType("application/json;")
                 .and()
-                .headers("Content-Length", "5946")
-                .header("Content-Length", equalTo("5946"))
+                .headers("Content-Length", "6632")
+                .header("Content-Length", equalTo("6632"))
                 .header("Connection", equalTo("Upgrade, Keep-Alive"))
                 .headers("Date", notNullValue())
                 .header("Date", notNullValue())
@@ -211,8 +211,8 @@ public class Test_01_HamcrestMatcher {
                         "experience[0][2].job",equalTo("Junior Developer"),  //aynı
                         "experience[0].job[2]",equalTo("Junior Developer"),  //aynı
                         "[0].experience.job[2]",equalTo("Junior Developer"),  //aynı
-                        "[29].experience.company[0]",equalTo("Google"),
-                        "experience[29][0].company",equalTo("Google"))
+                        "[29].education.school[0]",equalTo("Odtü"),
+                        "education[29][0].school",equalTo("Odtü"))
                 .and().log().headers();//sadece response headerları loglar
 
     }
